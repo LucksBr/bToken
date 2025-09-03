@@ -1,5 +1,8 @@
 package com.bToken.server.service.config;
 
+
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 
 import com.bToken.server.model.Token;
@@ -8,6 +11,7 @@ import com.bToken.server.service.custom.AbstractCrudService;
 import com.bToken.server.service.custom.ValidatorEntity;
 import com.bToken.server.service.custom.ValidatorField;
 import com.bToken.server.service.interfaces.TokenService;
+import com.bToken.server.service.validation.ServiceException;
 
 @Service
 public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implements TokenService {
@@ -22,6 +26,19 @@ public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implem
             new ValidatorField("groupToken","O grupo deste token deve ser informado!"),
             new ValidatorField("imageFile","A imagem deste token deve ser informada!")
         ));
+    }
+
+    
+
+    @Override
+    public void beforeSave(Token entity) throws ServiceException {
+        entity.setDateCreation(new Date());
+    }
+
+    @Override
+    public void validate(Token entity) throws ServiceException {
+        super.validate(entity);
+
     }
 
 }

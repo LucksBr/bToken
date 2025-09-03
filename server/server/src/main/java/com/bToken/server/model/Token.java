@@ -1,6 +1,6 @@
 package com.bToken.server.model;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
