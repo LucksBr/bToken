@@ -29,5 +29,7 @@ public interface BaseCrudServiceInterface<T,ID> {
     void deleteById(ID id) throws ServiceException;
     
     Long count() throws ServiceException;
+
+    void validate(T entity) throws ServiceException;
     
 }
