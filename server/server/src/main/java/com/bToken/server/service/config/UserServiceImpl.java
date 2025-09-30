@@ -6,7 +6,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bToken.server.model.User;
+import com.bToken.server.model.request.LoginRequest;
 import com.bToken.server.repository.interfaces.UserCrudRepository;
+import com.bToken.server.security.JwtUtil;
 import com.bToken.server.service.custom.AbstractCrudService;
 import com.bToken.server.service.custom.ValidatorEntity;
 import com.bToken.server.service.custom.ValidatorField;
@@ -19,10 +21,13 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
 
     private final UserCrudRepository mainRepository;
 
-    public UserServiceImpl(UserCrudRepository repository) {
+    private final JwtUtil jwtUtil;
+
+    public UserServiceImpl(UserCrudRepository repository, JwtUtil jwtUtil) {
         super(repository);
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.mainRepository = repository;
+        this.jwtUtil = jwtUtil;
 
         setValidatorEntity(new ValidatorEntity<>(getErrorBuilder(), 
             new ValidatorField("name","O nome do usuário deve ser informado!"),
@@ -46,6 +51,18 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
                             .orElseThrow(() -> new ServiceException("Nenhuma conta foi encontrada para o email informado"));
         
         return passwordEncoder.matches(nativePassword, userFound.getPassword());
+    }
+
+    @Override
+    public String authenticateAndGenarateToken(LoginRequest loginRequest) throws ServiceException {
+        if(loginRequest != null && loginRequest.isValid()) 
+            throw new ServiceException("O email e senha devem ser informados para realizar a autenticação!");
+
+        if(authenticate(loginRequest.getEmail(), loginRequest.getPassword())){
+            return jwtUtil.generateToken(loginRequest.getEmail());
+        }
+        
+        throw new ServiceException("Senha informada inválida!");
     }
     
 }
