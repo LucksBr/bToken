@@ -2,6 +2,7 @@ package com.bToken.server.service.config;
 
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -10,35 +11,44 @@ import com.bToken.server.repository.interfaces.TokenRepository;
 import com.bToken.server.service.custom.AbstractCrudService;
 import com.bToken.server.service.custom.ValidatorEntity;
 import com.bToken.server.service.custom.ValidatorField;
+import com.bToken.server.service.interfaces.QrCodeService;
 import com.bToken.server.service.interfaces.TokenService;
 import com.bToken.server.service.validation.ServiceException;
 
 @Service
 public class TokenServiceImpl extends AbstractCrudService<Token, Integer> implements TokenService {
 
-    public TokenServiceImpl(TokenRepository repository) {
+    private final QrCodeService qrCodeService;
+
+    public TokenServiceImpl(TokenRepository repository,
+                            QrCodeService qrCodeService
+    ) {
         super(repository);
+
+        this.qrCodeService = qrCodeService;
         
         setValidatorEntity(new ValidatorEntity<>(getErrorBuilder(), 
             new ValidatorField("name","O nome deve ser informado!"),
             new ValidatorField("description","A descrição deve ser informada!"),
             new ValidatorField("dateCreation","A data de criação deve ser informada!"),
-            new ValidatorField("groupToken","O grupo deste token deve ser informado!"),
-            new ValidatorField("imageFile","A imagem deste token deve ser informada!")
+            new ValidatorField("imageFile","A imagem deste token deve ser informada!"),
+            new ValidatorField("qrCode","O qrCode deste token deve ser informado!")
         ));
     }
-
-    
 
     @Override
     public void beforeSave(Token entity) throws ServiceException {
         entity.setDateCreation(new Date());
+
+        if(entity.getQrCode() != null){
+            entity.getQrCode().setHash(UUID.randomUUID().toString());
+        }
     }
 
     @Override
     public void validate(Token entity) throws ServiceException {
         super.validate(entity);
-
+        qrCodeService.validate(entity.getQrCode());
     }
 
 }
