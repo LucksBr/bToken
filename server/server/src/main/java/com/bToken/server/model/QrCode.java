@@ -1,7 +1,6 @@
 package com.bToken.server.model;
 
 import java.util.Date;
-import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,9 +32,6 @@ public class QrCode extends com.bToken.server.model.config.Entity<Integer> {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationDate;
-
-    @Temporal(TemporalType.DATE)
-    private Date dateCreation;
 
     @Override
     public Integer getId() {
@@ -78,55 +74,57 @@ public class QrCode extends com.bToken.server.model.config.Entity<Integer> {
         this.expirationDate = expirationDate;
     }
 
-    public Date getDateCreation() {
-        return dateCreation;
-    }
-
-    public void setDateCreation(Date dateCreation) {
-        this.dateCreation = dateCreation;
-    }
-
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.token);
-        hash = 67 * hash + Objects.hashCode(this.qrContent);
-        hash = 67 * hash + Objects.hashCode(this.hash);
-        hash = 67 * hash + Objects.hashCode(this.expirationDate);
-        hash = 67 * hash + Objects.hashCode(this.dateCreation);
-        return hash;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((token == null) ? 0 : token.hashCode());
+        result = prime * result + ((qrContent == null) ? 0 : qrContent.hashCode());
+        result = prime * result + ((hash == null) ? 0 : hash.hashCode());
+        result = prime * result + ((expirationDate == null) ? 0 : expirationDate.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
-        final QrCode other = (QrCode) obj;
-        if (!Objects.equals(this.qrContent, other.qrContent)) {
+        QrCode other = (QrCode) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
             return false;
-        }
-        if (!Objects.equals(this.hash, other.hash)) {
+        if (token == null) {
+            if (other.token != null)
+                return false;
+        } else if (!token.equals(other.token))
             return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
+        if (qrContent == null) {
+            if (other.qrContent != null)
+                return false;
+        } else if (!qrContent.equals(other.qrContent))
             return false;
-        }
-        if (!Objects.equals(this.token, other.token)) {
+        if (hash == null) {
+            if (other.hash != null)
+                return false;
+        } else if (!hash.equals(other.hash))
             return false;
-        }
-        if (!Objects.equals(this.expirationDate, other.expirationDate)) {
+        if (expirationDate == null) {
+            if (other.expirationDate != null)
+                return false;
+        } else if (!expirationDate.equals(other.expirationDate))
             return false;
-        }
-        return Objects.equals(this.dateCreation, other.dateCreation);
+        return true;
     }
+
+
+    
 
     
 }

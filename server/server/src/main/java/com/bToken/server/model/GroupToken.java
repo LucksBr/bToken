@@ -82,11 +82,11 @@ public class GroupToken extends com.bToken.server.model.config.Entity<Integer> {
         this.user = user;
     }
 
-    public List<Token> getToken() {
+    public List<Token> getTokenList() {
         return tokenList;
     }
 
-    public void setToken(List<Token> tokenList) {
+    public void setTokenList(List<Token> tokenList) {
         this.tokenList = tokenList;
     }
 
