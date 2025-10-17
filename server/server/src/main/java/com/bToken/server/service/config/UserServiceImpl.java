@@ -1,6 +1,7 @@
 package com.bToken.server.service.config;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,10 +48,14 @@ public class UserServiceImpl extends AbstractCrudService<User, Integer> implemen
     }
     
     public Boolean authenticate(String email, String nativePassword) throws ServiceException {
-        User userFound =  mainRepository.findByEmail(email)
-                            .orElseThrow(() -> new ServiceException("Nenhuma conta foi encontrada para o email informado"));
+        User userFound = findByEmail(email)
+                            .orElseThrow(() -> new ServiceException("Credenciais inválidas!"));
         
         return passwordEncoder.matches(nativePassword, userFound.getPassword());
+    }
+
+    public Optional<User> findByEmail(String email){
+        return mainRepository.findByEmail(email);
     }
 
     @Override
